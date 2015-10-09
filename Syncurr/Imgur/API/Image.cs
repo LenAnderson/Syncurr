@@ -27,7 +27,10 @@ namespace Syncurr.Imgur.API
             }
             set
             {
-                _name = new Regex(@"^(.+)(\.[^\.]+)$").Replace(value, "$1");
+                if (value != null)
+                {
+                    _name = new Regex(@"^(.+)(\.[^\.]+)$").Replace(value, "$1");
+                }
             }
         }
         [DataMember]
