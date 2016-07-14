@@ -23,7 +23,10 @@ namespace Syncurr.Imgur.API
         {
             get
             {
-                return _name;
+                if (_name != null)
+                    return _name;
+                else
+                    return id;
             }
             set
             {
