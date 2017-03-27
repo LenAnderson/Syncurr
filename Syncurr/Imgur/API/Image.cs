@@ -23,11 +23,17 @@ namespace Syncurr.Imgur.API
         {
             get
             {
-                return _name;
+                if (_name != null)
+                    return _name;
+                else
+                    return id;
             }
             set
             {
-                _name = new Regex(@"^(.+)(\.[^\.]+)$").Replace(value, "$1");
+                if (value != null)
+                {
+                    _name = new Regex(@"^(.+)(\.[^\.]+)$").Replace(value, "$1");
+                }
             }
         }
         [DataMember]

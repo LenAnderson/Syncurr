@@ -135,12 +135,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\HSandhof\Downloads\SocksWebProxy-master\SocksWebProxy-master\SocksWebProxy\SocksWebProxy.csproj">
-      <Project>{ef64b71a-6512-460e-8f0a-bcd456ff9461}</Project>
-      <Name>SocksWebProxy</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="favicon.ico" />
     <Content Include="syncurr.ico" />
   </ItemGroup>
@@ -155,6 +149,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SocksWebProxy\SocksWebProxy.csproj">
+      <Project>{ef64b71a-6512-460e-8f0a-bcd456ff9461}</Project>
+      <Name>SocksWebProxy</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

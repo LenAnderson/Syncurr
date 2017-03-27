@@ -12,7 +12,7 @@
       <Value Profile="(Default)">b8c91c5a069583a</Value>
     </Setting>
     <Setting Name="clientSecret" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">1b6fe1bfa3760e1d197bb5fbca23a95a8a93a1b5</Value>
+      <Value Profile="(Default)">dd23032f74db08c3528ee1120f8eb668dd75a73f</Value>
     </Setting>
     <Setting Name="accountUsername" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
