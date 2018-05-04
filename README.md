@@ -3,6 +3,11 @@ Application to sync local directories with Imgur albums
 
 Directories and Imgur albums added to Syncurr will be checked for changes every 10 minutes and synced.
 
+## Warning
+**Albums and images removed from Imgur will also be deleted locally.**
+
+**Albums and images you own will also be removed from Imgur when you delete the local copy!**
+
 
 ## Installation
 Download and unzip the [latest release](https://github.com/LenAnderson/Syncurr/releases/latest). Launch Syncurr.exe to start Syncurr.
@@ -10,24 +15,32 @@ Download and unzip the [latest release](https://github.com/LenAnderson/Syncurr/r
 
 ## Instructions
 
-### Proxy
-If you need to use a proxy the first thing you should do is configure the proxy settings in the Proxy tab.
-Choose between HTTP and SOCKS proxy and enter the proxy's URL (**for SOCKS proxies the proxy URL needs to be an IP address**), port, and if required the credentials.
-
-The internal proxy URL is only used with SOCKS proxy and is just needed for Syncurr to route the proxy connections. The URL is usually just <code>127.0.0.1</code>. Choose a free port for the internal routing.
-
 ### Imgur Authentication
-Once the proxy configuration is completed you need to log in to Imgur and authorize Syncurr to use your account.
+The first time Syncurr starts to synchronize it will ask for a pin from Imgur by opening the Imgur in your browser.
+Enter the pin into the text field in Syncurr and confirm to let Syncurr retrieve the access tokens from Imgur.
 
-In the Imgur Authorization tab click on the button labeled "Get Pin". This will open Imgur in your browser and provide a pin for Syncurr. Enter the pin into the text field and click on the "Get Tokens" button to retrieve the access tokens from Imgur.
+### Me
+If "Sync My Account" is activated in the settings Syncurr will automatically download all your albums into your default account directory. 
 
-You can now start using Syncurr!
+Folders added to the local account directory will be uploaded to Imgur as new albums.
+
+Folders removed from the local account directory will be deleted from Imgur.
+
+Albums created on Imgur will be added to the local directory as new folders.
+
+Albums deleted on Imgur will also be deleted locally.
+
+
+### Users
+Drag one or multiple folders from Windows Explorer onto the Syncurr window and choose to "Add User" to sync that folder with an Imgur user.
+
+Alternatively you can drag the URL of a user page from your browser onto the Syncurr window to add that user to the list of synchronized users.
+
+Only the account you used to provide a pin for Syncurr can upload and delete images or albums from Imgur. You cannot modify albums from other users.
 
 ### Albums
-To start syncing folders simply drag one or multiple folder from Windows Explorer onto the Syncurr window. All added folders will show up in the Albums tab.
-Double click (or choose Properties... from the context menu) an entry to set up the Album ID or change the path.
+Drag one or multiple folders from Windows Explorer onto the Syncurr window and choose to "Add Album" to sync that folder with an Imgur album.
 
+Alternatively you can drag the URL of an album from your browser onto the Syncurr window to add that album to the list of synchronized albums.
 
-## Acknowledgements
-Using SOCKS proxies is made possible thanks to Landon Key's SocksWebProxy project which can be found here:
-https://github.com/postworthy/SocksWebProxy
+Only albums owned by the account you used to provide a pin for Syncurr can upload and delete images from Imgur. You cannot modify albums from other users.
