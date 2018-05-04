@@ -15,6 +15,8 @@ Download and unzip the [latest release](https://github.com/LenAnderson/Syncurr/r
 
 ## Instructions
 
+![screenshot](https://i.imgur.com/DMqke93.png)
+
 ### Imgur Authentication
 The first time Syncurr starts to synchronize it will ask for a pin from Imgur by opening the Imgur in your browser.
 Enter the pin into the text field in Syncurr and confirm to let Syncurr retrieve the access tokens from Imgur.
