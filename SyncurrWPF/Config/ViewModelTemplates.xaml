@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					
+					xmlns:local="clr-namespace:SyncurrWPF.Config"
+					xmlns:vm="clr-namespace:SyncurrWPF.ViewModels"
+					xmlns:v="clr-namespace:SyncurrWPF.Views"
+					>
+	<DataTemplate DataType="{x:Type vm:SyncListViewModel}">
+		<v:SyncListView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vm:AlbumListViewModel}">
+		<v:AlbumListView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vm:MeViewModel}">
+		<v:AlbumListView />
+	</DataTemplate>
+	
+	<DataTemplate DataType="{x:Type vm:UserListViewModel}">
+		<v:AlbumListView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+		<v:SettingsView />
+	</DataTemplate>
+</ResourceDictionary>
