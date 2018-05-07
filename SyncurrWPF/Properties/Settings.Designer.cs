@@ -122,5 +122,113 @@ namespace SyncurrWPF.Properties {
                 this["SyncInterval"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DeleteLocalFolder {
+            get {
+                return ((bool)(this["DeleteLocalFolder"]));
+            }
+            set {
+                this["DeleteLocalFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AskDeleteLocalFolder {
+            get {
+                return ((bool)(this["AskDeleteLocalFolder"]));
+            }
+            set {
+                this["AskDeleteLocalFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DeleteLocalImage {
+            get {
+                return ((bool)(this["DeleteLocalImage"]));
+            }
+            set {
+                this["DeleteLocalImage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AskDeleteLocalImage {
+            get {
+                return ((bool)(this["AskDeleteLocalImage"]));
+            }
+            set {
+                this["AskDeleteLocalImage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DeleteRemoteFolder {
+            get {
+                return ((bool)(this["DeleteRemoteFolder"]));
+            }
+            set {
+                this["DeleteRemoteFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AskDeleteRemoteFolder {
+            get {
+                return ((bool)(this["AskDeleteRemoteFolder"]));
+            }
+            set {
+                this["AskDeleteRemoteFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DeleteRemoteImage {
+            get {
+                return ((bool)(this["DeleteRemoteImage"]));
+            }
+            set {
+                this["DeleteRemoteImage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AskDeleteRemoteImage {
+            get {
+                return ((bool)(this["AskDeleteRemoteImage"]));
+            }
+            set {
+                this["AskDeleteRemoteImage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StartMinimized {
+            get {
+                return ((bool)(this["StartMinimized"]));
+            }
+            set {
+                this["StartMinimized"] = value;
+            }
+        }
     }
 }

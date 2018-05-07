@@ -113,6 +113,11 @@ namespace SyncurrWPF.ViewModels
 				}
 			};
 			Timer.Start();
+
+			if (Properties.Settings.Default.StartMinimized)
+			{
+				HasWindow = false;
+			}
 		}
 
 
@@ -155,11 +160,15 @@ namespace SyncurrWPF.ViewModels
 					{
 						if (Album.Exists(file, ""))
 						{
-							Albums.Albums.Add(Album.Get(file, ""));
+							Album album = Album.Get(file, "");
+							album.Save();
+							Albums.Albums.Add(album);
 						}
 						else if (User.Exists(file))
 						{
-							Users.Users.Add(User.Get(file));
+							User user = User.Get(file);
+							await user.Save();
+							Users.Users.Add(user);
 						}
 						else
 						{

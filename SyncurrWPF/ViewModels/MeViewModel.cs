@@ -1,4 +1,5 @@
-﻿using MahApps.Metro.Controls.Dialogs;
+﻿using Imgur.API.Models;
+using MahApps.Metro.Controls.Dialogs;
 using Newtonsoft.Json;
 using SyncurrWPF.Helpers;
 using SyncurrWPF.Models;
@@ -60,7 +61,8 @@ namespace SyncurrWPF.ViewModels
 				}
 				if (Me?.Name == null)
 				{
-					Me = User.Create(Properties.Settings.Default.MeRoot, (await ImgurHelper.GetToken()).AccountUsername);
+					IOAuth2Token token = await ImgurHelper.GetToken();
+					Me = User.Create(Properties.Settings.Default.MeRoot, token.AccountUsername, token.AccountId);
 				}
 			}
 			if (Me?.Name != null)
@@ -69,7 +71,7 @@ namespace SyncurrWPF.ViewModels
 				try
 				{
 					pdc.SetMessage(string.Format("synchronizing account\n\n{0}\n{1}", Me.Name, Me.Root));
-					await Me.Sync();
+					await Me.Sync(this);
 				}
 				catch (Exception ex)
 				{
@@ -89,6 +91,26 @@ namespace SyncurrWPF.ViewModels
 
 
 		#region Commands
+		private ICommand _removeCommand;
+		public new ICommand RemoveCommand
+		{
+			get
+			{
+				if (_removeCommand == null)
+				{
+					_removeCommand = new RelayCommand(p =>
+					{
+						SelectedAlbum.Synchronize = false;
+						SelectedAlbum.Save();
+					},
+					p =>
+					{
+						return SelectedAlbum != null && SelectedAlbum.Synchronize;
+					});
+				}
+				return _removeCommand;
+			}
+		}
 		#endregion
 	}
 }

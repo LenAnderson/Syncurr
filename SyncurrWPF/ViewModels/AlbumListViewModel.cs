@@ -59,7 +59,7 @@ namespace SyncurrWPF.ViewModels
 				foreach (Album album in Albums)
 				{
 					pdc.SetMessage(string.Format("synchronizing albums\n\n{0}\n{1}\n{2}", album.Title, album.Id, album.Root));
-					await album.Sync();
+					await album.Sync(this);
 				}
 			}
 			catch (Exception ex)
@@ -98,6 +98,28 @@ namespace SyncurrWPF.ViewModels
 					});
 				}
 				return _removeCommand;
+			}
+		}
+
+		private ICommand _toggleSyncCommand;
+		public ICommand ToggleSyncCommand
+		{
+			get
+			{
+				if (_toggleSyncCommand == null)
+				{
+					_toggleSyncCommand = new RelayCommand(
+						p => {
+							SelectedAlbum.Synchronize = !SelectedAlbum.Synchronize;
+							SelectedAlbum.Save();
+						},
+						p =>
+						{
+							return SelectedAlbum != null;
+						}
+					);
+				}
+				return _toggleSyncCommand;
 			}
 		}
 

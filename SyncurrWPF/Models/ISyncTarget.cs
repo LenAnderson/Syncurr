@@ -8,6 +8,6 @@ namespace SyncurrWPF.Models
 {
 	public interface ISyncTarget
 	{
-		Task Sync();
+		Task Sync(object context);
 	}
 }

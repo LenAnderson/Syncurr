@@ -74,7 +74,7 @@ namespace SyncurrWPF.ViewModels
 				foreach (User user in Users)
 				{
 					pdc.SetMessage(string.Format("synchronizing users\n\n{0}\n{1}", user.Name, user.Root));
-					await user.Sync();
+					await user.Sync(this);
 				}
 			}
 			catch (Exception ex)
@@ -112,6 +112,28 @@ namespace SyncurrWPF.ViewModels
 					});
 				}
 				return _removeCommand;
+			}
+		}
+
+		private ICommand _toggleSyncCommand;
+		public ICommand ToggleSyncCommand
+		{
+			get
+			{
+				if (_toggleSyncCommand == null)
+				{
+					_toggleSyncCommand = new RelayCommand(
+						async p => {
+							SelectedUser.Synchronize = !SelectedUser.Synchronize;
+							await SelectedUser.Save();
+						},
+						p =>
+						{
+							return SelectedUser != null;
+						}
+					);
+				}
+				return _toggleSyncCommand;
 			}
 		}
 

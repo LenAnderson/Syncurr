@@ -1,5 +1,6 @@
 ﻿using Imgur.API.Endpoints.Impl;
 using Imgur.API.Models;
+using MahApps.Metro.Controls.Dialogs;
 using Newtonsoft.Json;
 using SyncurrWPF.Helpers;
 using System;
@@ -25,6 +26,7 @@ namespace SyncurrWPF.Models
 			if (Exists(path))
 			{
 				user = JsonConvert.DeserializeObject<User>(File.ReadAllText(Path.Combine(path, "syncurr.user.json")));
+				user.Root = path;
 				Album[] albums = user.AlbumRoots.Where(it => Album.Exists(it, "")).Select(it => Album.Get(it, "")).ToArray();
 				user.Albums.Clear();
 				foreach (Album album in albums)
@@ -39,9 +41,10 @@ namespace SyncurrWPF.Models
 			}
 			return user;
 		}
-		public static User Create(string path, string name)
+		public static User Create(string path, string name, string id = null)
 		{
 			User user = new User(path, name);
+			user.Id = id;
 			user.Save();
 			return user;
 		}
@@ -51,6 +54,7 @@ namespace SyncurrWPF.Models
 
 
 		private string _root;
+		[JsonIgnore]
 		public string Root
 		{
 			get { return _root; }
@@ -63,7 +67,21 @@ namespace SyncurrWPF.Models
 				}
 			}
 		}
-		
+
+		private bool _synchronize = true;
+		public bool Synchronize
+		{
+			get { return _synchronize; }
+			set
+			{
+				if (_synchronize != value)
+				{
+					_synchronize = value;
+					OnPropertyChanged(nameof(Synchronize));
+				}
+			}
+		}
+
 		private IAccount _imgurUser;
 		[JsonIgnore]
 		public IAccount ImgurUser
@@ -133,7 +151,7 @@ namespace SyncurrWPF.Models
 
 
 
-		public async Task Sync()
+		public async Task Sync(object context)
 		{
 			await Task.Run(async () =>
 			{
@@ -160,41 +178,77 @@ namespace SyncurrWPF.Models
 					IAlbum[] download = onlyRemote.Where(r => !Albums.Any(a => a.Id == r.Id)).ToArray();
 					foreach (IAlbum album in download)
 					{
-						await Album.Get(Root, album.Title ?? album.Id, album.Id, true).Sync();
+						await Album.Get(Root, album.Title ?? album.Id, album.Id, true).Sync(context);
 					}
 					// delete albums (A) from local where in json
-					Album[] deleteLocal = onlyLocal.Where(l => Albums.Any(a => a.Id == l.Id)).ToArray();
-					foreach (Album album in deleteLocal)
+					if (Properties.Settings.Default.DeleteLocalFolder)
 					{
-						Directory.Delete(album.Root, true);
+						Album[] deleteLocal = onlyLocal.Where(l => Albums.Any(a => a.Id == l.Id && a.Synchronize)).ToArray();
+						foreach (Album album in deleteLocal)
+						{
+							bool ok = true;
+							if (Properties.Settings.Default.AskDeleteLocalFolder)
+							{
+								MessageDialogResult result = await DialogCoordinator.Instance.ShowMessageAsync(context, "Delete local album?", album.Root, MessageDialogStyle.AffirmativeAndNegative);
+								ok = result == MessageDialogResult.Affirmative;
+							}
+							if (ok)
+							{
+								Directory.Delete(album.Root, true);
+							}
+						}
 					}
 					// delete albums (B) from remote where in json
-					IAlbum[] deleteRemote = onlyRemote.Where(r => Albums.Any(a => a.Id == r.Id)).ToArray();
-					foreach (IAlbum album in deleteRemote)
+					if (Properties.Settings.Default.DeleteRemoteFolder)
 					{
-						await endpoint.DeleteAlbumAsync(album.Id, Name);
+						IAlbum[] deleteRemote = onlyRemote.Where(r => Albums.Any(a => a.Id == r.Id && a.Synchronize)).ToArray();
+						foreach (IAlbum album in deleteRemote)
+						{
+							bool ok = true;
+							if (Properties.Settings.Default.AskDeleteRemoteFolder)
+							{
+								MessageDialogResult result = await DialogCoordinator.Instance.ShowMessageAsync(context, "Delete Imgur album?", album.Title, MessageDialogStyle.AffirmativeAndNegative);
+								ok = result == MessageDialogResult.Affirmative;
+							}
+							if (ok)
+							{
+								await endpoint.DeleteAlbumAsync(album.Id, Name);
+							}
+						}
 					}
 					// create albums without id
-					Album[] upload = local.Where(l => l.Id == null).ToArray();
+					Album[] upload = local.Where(l => l.Id == null && l.Synchronize).ToArray();
 					foreach (Album album in upload)
 					{
 						AlbumEndpoint ep = new AlbumEndpoint(await ImgurHelper.GetClient());
 						IAlbum rAlbum = await ep.CreateAlbumAsync(album.Title);
 						album.ImgurAlbum = rAlbum;
-						await album.Sync();
+						await album.Sync(context);
 					}
 				}
 				else
 				{
 					// remove albums (A)
-					foreach (Album album in onlyLocal)
+					if (Properties.Settings.Default.DeleteLocalFolder)
 					{
-						album.Remove();
+						foreach (Album album in onlyLocal.Where(it => it.Synchronize))
+						{
+							bool ok = true;
+							if (Properties.Settings.Default.AskDeleteLocalFolder)
+							{
+								MessageDialogResult result = await DialogCoordinator.Instance.ShowMessageAsync(context, "Delete local album?", album.Root, MessageDialogStyle.AffirmativeAndNegative);
+								ok = result == MessageDialogResult.Affirmative;
+							}
+							if (ok)
+							{
+								album.Remove();
+							}
+						}
 					}
 					// download albums (B)
 					foreach (IAlbum album in onlyRemote)
 					{
-						await Album.Get(Root, album.Title ?? album.Id, album.Id, true).Sync();
+						await Album.Get(Root, album.Title ?? album.Id, album.Id, true).Sync(context);
 					}
 				}
 
@@ -211,6 +265,12 @@ namespace SyncurrWPF.Models
 					}
 				});
 				await Save();
+
+				// synchronize album images
+				foreach (Album album in albums)
+				{
+					await album.Sync(context);
+				}
 			});
 		}
 

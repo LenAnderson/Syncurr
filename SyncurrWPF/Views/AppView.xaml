@@ -20,8 +20,8 @@
 				   BorderThickness="1"
 				   GlowBrush="{DynamicResource AccentColorBrush}"
 				   Icon="pack://application:,,,/Resources/ico/syncurr.ico"
-				   Height="500"
-				   Width="600"
+				   MinHeight="500"
+				   MinWidth="600"
 				   Visibility="{Binding HasWindow, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Hidden}}"
 				   
 				   dlg:DialogParticipation.Register="{Binding}"

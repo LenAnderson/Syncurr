@@ -1,5 +1,6 @@
 ﻿using Imgur.API.Endpoints.Impl;
 using Imgur.API.Models;
+using MahApps.Metro.Controls.Dialogs;
 using Newtonsoft.Json;
 using SyncurrWPF.Helpers;
 using System;
@@ -70,6 +71,20 @@ namespace SyncurrWPF.Models
 		}
 
 		public bool Managed = false;
+
+		private bool _synchronize = true;
+		public bool Synchronize
+		{
+			get { return _synchronize; }
+			set
+			{
+				if (_synchronize != value)
+				{
+					_synchronize = value;
+					OnPropertyChanged(nameof(Synchronize));
+				}
+			}
+		}
 		
 		private IAlbum _imgurAlbum;
 		[JsonIgnore]
@@ -140,8 +155,9 @@ namespace SyncurrWPF.Models
 
 
 
-		public async Task Sync()
+		public async Task Sync(object context)
 		{
+			if (!Synchronize) return;
 			await Task.Run(async () =>
 			{
 				// get local files
@@ -175,24 +191,60 @@ namespace SyncurrWPF.Models
 						await img.Download(this);
 					}
 					// delete files (A) from local where in json
-					FileInfo[] deleteLocal = onlyLocal.Where(l => Images.Any(i => i == l.Name)).ToArray();
-					foreach (FileInfo img in deleteLocal)
+					if (Properties.Settings.Default.DeleteLocalImage)
 					{
-						File.Delete(img.FullName);
+						FileInfo[] deleteLocal = onlyLocal.Where(l => Images.Any(i => i == l.Name)).ToArray();
+						foreach (FileInfo img in deleteLocal)
+						{
+							bool ok = true;
+							if (Properties.Settings.Default.AskDeleteLocalImage)
+							{
+								MessageDialogResult result = await DialogCoordinator.Instance.ShowMessageAsync(context, "Delete local image?", img.FullName, MessageDialogStyle.AffirmativeAndNegative);
+								ok = result == MessageDialogResult.Affirmative;
+							}
+							if (ok)
+							{
+								File.Delete(img.FullName);
+							}
+						}
 					}
 					// delete files (B) from remote where in json
-					Image[] deleteRemote = onlyRemote.Where(r => Images.Any(i => i == r.FileName)).ToArray();
-					foreach (Image img in deleteRemote)
+					if (Properties.Settings.Default.DeleteRemoteImage)
 					{
-						await img.Delete();
+						Image[] deleteRemote = onlyRemote.Where(r => Images.Any(i => i == r.FileName)).ToArray();
+						foreach (Image img in deleteRemote)
+						{
+							bool ok = true;
+							if (Properties.Settings.Default.AskDeleteRemoteImage)
+							{
+								MessageDialogResult result = await DialogCoordinator.Instance.ShowMessageAsync(context, "Delete Imgur image?", img.Name, MessageDialogStyle.AffirmativeAndNegative);
+								ok = result == MessageDialogResult.Affirmative;
+							}
+							if (ok)
+							{
+								await img.Delete();
+							}
+						}
 					}
 				}
 				else //not own album
 				{
 					// remove files (A)
-					foreach (FileInfo img in onlyLocal)
+					if (Properties.Settings.Default.DeleteLocalImage)
 					{
-						File.Delete(img.FullName);
+						foreach (FileInfo img in onlyLocal)
+						{
+							bool ok = true;
+							if (Properties.Settings.Default.AskDeleteLocalImage)
+							{
+								MessageDialogResult result = await DialogCoordinator.Instance.ShowMessageAsync(context, "Delete local image?", img.FullName, MessageDialogStyle.AffirmativeAndNegative);
+								ok = result == MessageDialogResult.Affirmative;
+							}
+							if (ok)
+							{
+								File.Delete(img.FullName);
+							}
+						}
 					}
 					// download files (B)
 					foreach (Image img in onlyRemote)

@@ -22,12 +22,14 @@
 		<DataGrid.ContextMenu>
 			<ContextMenu>
 				<MenuItem Header="Remove from Syncurr" Command="{Binding RemoveCommand}" />
+				<MenuItem Header="Toggle Synchronization" Command="{Binding ToggleSyncCommand}" />
 				<MenuItem Header="Open local folder" Command="{Binding OpenLocalCommand}" />
 				<MenuItem Header="Open on Imgur" Command="{Binding OpenRemoteCommand}" />
 				<MenuItem Header="Relocate..." Command="{Binding RelocateCommand}" />
 			</ContextMenu>
 		</DataGrid.ContextMenu>
 		<DataGrid.Columns>
+			<DataGridCheckBoxColumn Header="Sync" Binding="{Binding Synchronize}" />
 			<DataGridTextColumn Header="Title" Binding="{Binding Title}" />
 			<DataGridTextColumn Header="Id" Binding="{Binding Id}" />
 			<DataGridTextColumn Header="Folder" Binding="{Binding Root}" />

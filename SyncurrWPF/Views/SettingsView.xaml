@@ -11,34 +11,107 @@
 			 xmlns:controls="clr-namespace:SyncurrWPF.Helpers.Controls"
 			 xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
 			 >
-	<controls:AutoGrid Margin="10">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="120" />
-			<ColumnDefinition Width="150" />
-		</Grid.ColumnDefinitions>
+	<ScrollViewer>
+		<controls:AutoGrid Margin="10">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition MinWidth="120" />
+				<ColumnDefinition MinWidth="150" />
+			</Grid.ColumnDefinitions>
+			<Grid.Resources>
+				<Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+					<Setter Property="Margin" Value="10 5" />
+				</Style>
+			</Grid.Resources>
 
-		<TextBlock Text="Sync My Account" />
-		<CheckBox IsChecked="{Binding SyncMe}" />
 
-		<TextBlock Grid.ColumnSpan="2" Text="My Account Directory" />
-		<TextBox Grid.ColumnSpan="2" Text="{Binding MeRoot}" />
 
-		<StackPanel Grid.ColumnSpan="2" Height="10" />
 
-		<TextBlock Text="Sync every" VerticalAlignment="Center" />
-		<StackPanel Orientation="Horizontal">
-			<metro:NumericUpDown Value="{Binding SyncInterval}" Minimum="10" />
-			<TextBlock Text=" minutes" VerticalAlignment="Center" />
-		</StackPanel>
+			<TextBlock Text="Start Syncurr when Windows starts" />
+			<CheckBox IsChecked="{Binding Startup}" />
 
-		<StackPanel Grid.ColumnSpan="2" Height="10" />
+			<TextBlock Text="On start minimize to tray" />
+			<CheckBox IsChecked="{Binding StartMinimized}" />
+			
+			
+			
+			
 
-		<Button Content="Sync Now" Command="{Binding DataContext.SyncCommand, RelativeSource={RelativeSource AncestorType={x:Type metro:MetroWindow}}}" />
-		<StackPanel />
+			<StackPanel Grid.ColumnSpan="2" Height="10" />
 
-		<StackPanel Grid.ColumnSpan="2" Height="10" />
+			<TextBlock Text="Sync my account" />
+			<CheckBox IsChecked="{Binding SyncMe}" />
 
-		<Button Content="Log Out" Command="{Binding DisconnectCommand}" />
-		<StackPanel />
-	</controls:AutoGrid>
+			<TextBlock Grid.ColumnSpan="2" Text="My account directory" />
+			<TextBox Grid.ColumnSpan="2" Text="{Binding MeRoot}" />
+			
+			
+			
+			
+
+			<StackPanel Grid.ColumnSpan="2" Height="10" />
+
+			<TextBlock Text="Sync every" VerticalAlignment="Center" />
+			<StackPanel Orientation="Horizontal">
+				<metro:NumericUpDown Value="{Binding SyncInterval}" Minimum="10" />
+				<TextBlock Text=" minutes" VerticalAlignment="Center" />
+			</StackPanel>
+			
+			
+			
+			
+			
+
+			<StackPanel Grid.ColumnSpan="2" Height="10" />
+
+			<TextBlock Text="Delete local albums" />
+			<CheckBox IsChecked="{Binding DeleteLocalFolder}" />
+
+			<TextBlock Text="Ask before deleting local albums" IsEnabled="{Binding DeleteLocalFolder}" />
+			<CheckBox IsChecked="{Binding AskDeleteLocalFolder}" IsEnabled="{Binding DeleteLocalFolder}" />
+
+			<StackPanel Grid.ColumnSpan="2" Height="10" />
+
+			<TextBlock Text="Delete local images" />
+			<CheckBox IsChecked="{Binding DeleteLocalImage}" />
+
+			<TextBlock Text="Ask before deleting local images" IsEnabled="{Binding DeleteLocalImage}" />
+			<CheckBox IsChecked="{Binding AskDeleteLocalImage}" IsEnabled="{Binding DeleteLocalImage}" />
+
+
+
+
+
+
+			<StackPanel Grid.ColumnSpan="2" Height="10" />
+
+			<TextBlock Text="Delete Remote albums" />
+			<CheckBox IsChecked="{Binding DeleteRemoteFolder}" />
+
+			<TextBlock Text="Ask before deleting Remote albums" IsEnabled="{Binding DeleteRemoteFolder}" />
+			<CheckBox IsChecked="{Binding AskDeleteRemoteFolder}" IsEnabled="{Binding DeleteRemoteFolder}" />
+
+			<StackPanel Grid.ColumnSpan="2" Height="10" />
+
+			<TextBlock Text="Delete Remote images" />
+			<CheckBox IsChecked="{Binding DeleteRemoteImage}" />
+
+			<TextBlock Text="Ask before deleting Remote images" IsEnabled="{Binding DeleteRemoteImage}" />
+			<CheckBox IsChecked="{Binding AskDeleteRemoteImage}" IsEnabled="{Binding DeleteRemoteImage}" />
+
+
+
+
+
+
+			<StackPanel Grid.ColumnSpan="2" Height="10" />
+
+			<Button Content="Sync Now" Command="{Binding DataContext.SyncCommand, RelativeSource={RelativeSource AncestorType={x:Type metro:MetroWindow}}}" />
+			<StackPanel />
+
+			<StackPanel Grid.ColumnSpan="2" Height="10" />
+
+			<Button Content="Log Out" Command="{Binding DisconnectCommand}" />
+			<StackPanel />
+		</controls:AutoGrid>
+	</ScrollViewer>
 </UserControl>
