@@ -82,7 +82,7 @@ namespace SyncurrWPF.Models
 		{
 			get
 			{
-				return string.Format("{0}.{1}", Name, Extension);
+				return string.Format("{0}.{1}", new Regex(@"[^a-z0-9\-_ ]+", RegexOptions.IgnoreCase).Replace(Name, "_"), Extension);
 			}
 		}
 
