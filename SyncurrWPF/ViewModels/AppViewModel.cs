@@ -92,6 +92,8 @@ namespace SyncurrWPF.ViewModels
 		}
 
 		private DispatcherTimer Timer;
+		private bool IsSyncing = false;
+		private ProgressDialogController SyncPdc = null;
 
 
 
@@ -196,6 +198,25 @@ namespace SyncurrWPF.ViewModels
 
 
 
+		public async Task DoSync(ProgressDialogController pdc)
+		{
+			SyncPdc = pdc;
+			IsSyncing = true;
+			foreach (SyncViewModel tab in Tabs)
+			{
+				await tab.Sync(SyncPdc);
+			}
+			if (SyncPdc != null && HasWindow)
+			{
+				await pdc.CloseAsync();
+				SyncPdc = null;
+			}
+			IsSyncing = false;
+		}
+
+
+
+
 		#region Commands
 		private ICommand _showSettingsCommand;
 		public ICommand ShowSettingsCommand
@@ -226,11 +247,8 @@ namespace SyncurrWPF.ViewModels
 							IsLoading = true;
 							ProgressDialogController pdc = await DialogCoordinator.Instance.ShowProgressAsync(this, "Synchronizing", "");
 							pdc.SetIndeterminate();
-							foreach(SyncViewModel tab in Tabs)
-							{
-								await tab.Sync(pdc);
-							}
-							await pdc.CloseAsync();
+							SyncPdc = pdc;
+							await DoSync(pdc);
 							IsLoading = false;
 						},
 						p =>
@@ -265,8 +283,20 @@ namespace SyncurrWPF.ViewModels
 			{
 				if (_toggleWindowCommand == null)
 				{
-					_toggleWindowCommand = new RelayCommand(p => {
+					_toggleWindowCommand = new RelayCommand(async p => {
 						HasWindow = !HasWindow;
+						if (HasWindow)
+						{
+							if (IsSyncing && SyncPdc == null)
+							{
+								ProgressDialogController pdc = await DialogCoordinator.Instance.ShowProgressAsync(this, "Synchronizing", "");
+								pdc.SetIndeterminate();
+								SyncPdc = pdc;
+							} else if (!IsSyncing && SyncPdc != null)
+							{
+								await SyncPdc.CloseAsync();
+							}
+						}
 					});
 				}
 				return _toggleWindowCommand;
