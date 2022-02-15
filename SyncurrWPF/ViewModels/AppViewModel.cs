@@ -202,10 +202,14 @@ namespace SyncurrWPF.ViewModels
 		{
 			SyncPdc = pdc;
 			IsSyncing = true;
+			var currentTab = SelectedTab;
 			foreach (SyncViewModel tab in Tabs)
 			{
+				SelectedTab = tab;
+				await Task.Delay(10);
 				await tab.Sync(SyncPdc);
 			}
+			SelectedTab = currentTab;
 			if (SyncPdc != null && HasWindow)
 			{
 				await pdc.CloseAsync();
