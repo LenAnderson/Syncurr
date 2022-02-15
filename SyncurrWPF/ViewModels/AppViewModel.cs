@@ -125,18 +125,24 @@ namespace SyncurrWPF.ViewModels
 
 		public void InitTabs()
 		{
-			Tabs.Clear();
-			if (Properties.Settings.Default.SyncMe)
+			if (Properties.Settings.Default.SyncMe && Tabs.Count < 3)
 			{
 				Me = new MeViewModel();
-				Tabs.Add(Me);
+				Tabs.Insert(0, Me);
+			}
+			else if (!Properties.Settings.Default.SyncMe && Tabs.Count >= 3)
+			{
+				Tabs.RemoveAt(0);
 			}
 
-			Users = new UserListViewModel();
-			Tabs.Add(Users);
+			if (Tabs.Count == 0)
+			{
+				Users = new UserListViewModel();
+				Tabs.Add(Users);
 
-			Albums = new AlbumListViewModel();
-			Tabs.Add(Albums);
+				Albums = new AlbumListViewModel();
+				Tabs.Add(Albums);
+			}
 		}
 
 
